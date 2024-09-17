@@ -1,6 +1,7 @@
 package br.com.brefood.pagamentos.service;
 
 import br.com.brefood.pagamentos.dto.PagamentoDTO;
+import br.com.brefood.pagamentos.http.PedidoClient;
 import br.com.brefood.pagamentos.repository.PagamentoRepository;
 import br.com.brefood.pagamentos.model.Pagamento;
 import br.com.brefood.pagamentos.model.enums.Status;
@@ -11,12 +12,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class PagamentoService {
     @Autowired
     private PagamentoRepository pagamentoRepository;
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private PedidoClient pedido;
 
     public Page<PagamentoDTO> obterTodos(Pageable paginacao) {
         return pagamentoRepository
@@ -48,5 +53,17 @@ public class PagamentoService {
 
     public void excluirPagamento(Long id) {
         pagamentoRepository.deleteById(id);
+    }
+
+    public void confirmarPagamento(Long id){
+        Optional<Pagamento> pagamento = pagamentoRepository.findById(id);
+
+        if (!pagamento.isPresent()) {
+            throw new EntityNotFoundException();
+        }
+
+        pagamento.get().setStatus(Status.CONFIRMADO);
+        pagamentoRepository.save(pagamento.get());
+        pedido.atualizaPagamento(pagamento.get().getPedidoId());
     }
 }

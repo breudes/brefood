@@ -50,4 +50,9 @@ public class PagamentoController {
         pagamentoService.excluirPagamento(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PatchMapping("/{id}/confirmar")
+    public void confirmarPagamento(@PathVariable @NotNull Long id){
+        pagamentoService.confirmarPagamento(id);
+    }
 }
