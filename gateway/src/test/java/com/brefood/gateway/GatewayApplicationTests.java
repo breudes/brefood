@@ -1,10 +1,10 @@
-package br.com.brefood.pedidos;
+package com.brefood.gateway;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class PedidosApplicationTests {
+class GatewayApplicationTests {
 
 	@Test
 	void contextLoads() {
